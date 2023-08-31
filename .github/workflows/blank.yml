@@ -44,12 +44,14 @@ jobs:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.EC2_HOST }}
           USERNAME: ${{ secrets.EC2_USERNAME }}
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST "\
-          docker pull your-image-name:latest && \
-          docker run -d --name your-container-name -p 8080:8080 your-image-name:latest"
+          docker pull $DOCKER_USERNAME@testimage:latest && \
+          docker run -d --name your-container-name -p 8080:8080 $DOCKER_USERNAME@testimage:latest"
           rm -f private_key.pem
 
 
