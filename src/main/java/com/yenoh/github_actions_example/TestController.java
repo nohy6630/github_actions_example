@@ -13,7 +13,7 @@ public class TestController {
 
     @GetMapping("/test")
     public TestEntity test(){
-        log.info("test");
+        log.info("test2");
         return testService.test();
     }
 }
