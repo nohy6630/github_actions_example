@@ -48,7 +48,7 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST "docker pull $DOCKER_USERNAME/testimage:latest && docker run -d --name spring-server -p 8080:8080 $DOCKER_USERNAME/testimage:latest"
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST "sudo docker pull $DOCKER_USERNAME/testimage:latest && sudo docker run -d --name spring-server -p 8080:8080 $DOCKER_USERNAME/testimage:latest"
           rm -f private_key.pem
 
 
