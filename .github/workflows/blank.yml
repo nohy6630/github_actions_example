@@ -46,7 +46,7 @@ jobs:
           USER: ${{secrets.EC2_USER}}
           DOCKER_USER: ${{secrets.DOCKER_USER}}
         run: |
-          echo $SSH_KEY > private_key.pem
+          echo "$SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$URL "\
           sudo docker stop spring-server || true && \
