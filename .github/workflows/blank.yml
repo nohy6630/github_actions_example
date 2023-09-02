@@ -26,12 +26,12 @@ jobs:
 
       - name: Build and push Docker image
         env:
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
           DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t $DOCKER_USERNAME/testimage .
-          docker push $DOCKER_USERNAME/testimage
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker build -t $DOCKER_USER/testimage .
+          docker push $DOCKER_USER/testimage
 
   deploy:
     needs: build
@@ -41,18 +41,18 @@ jobs:
 
       - name: Deploy to EC2
         env:
-          PRIVATE_KEY: ${{secrets.EC2_SSH_PRIVATE_KEY}}
-          HOST: ${{secrets.EC2_HOST}}
-          USERNAME: ${{secrets.EC2_USERNAME}}
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          SSH_KEY: ${{secrets.EC2_SSH_KEY}}
+          URL: ${{secrets.EC2_URL}}
+          USER: ${{secrets.EC2_USER}}
+          DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
+          echo "$SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST "\
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$URL "\
           sudo docker stop spring-server || true && \
           sudo docker rm spring-server || true && \
-          sudo docker pull $DOCKER_USERNAME/testimage:latest && \
-          sudo docker run -d --name spring-server -p 8080:8080 $DOCKER_USERNAME/testimage:latest"
+          sudo docker pull $DOCKER_USER/testimage:latest && \
+          sudo docker run -d --name spring-server -p 8080:8080 $DOCKER_USER/testimage:latest"
           rm -f private_key.pem
 
 
